@@ -1,0 +1,91 @@
+<?xml version="1.0" ?>
+<!--
+  BlueROV2 — Minimal stable SDF for Gazebo Harmonic + DART
+  
+  Single rigid body (no joints). Forces applied externally via
+  ApplyLinkWrench system. Hydrodynamics handled by the controller
+  dynamics model, not Gazebo plugins.
+-->
+<sdf version="1.9">
+  <model name="bluerov2">
+
+    <link name="base_link">
+      <inertial>
+        <mass>11.5</mass>
+        <inertia>
+          <ixx>0.16</ixx>
+          <iyy>0.16</iyy>
+          <izz>0.16</izz>
+          <ixy>0</ixy> <ixz>0</ixz> <iyz>0</iyz>
+        </inertia>
+      </inertial>
+
+      <!-- Simple box collision for physics (small, won't cause AABB issues) -->
+      <collision name="body_collision">
+        <geometry>
+          <box><size>0.45 0.34 0.25</size></box>
+        </geometry>
+      </collision>
+
+      <!-- Main body mesh -->
+      <visual name="body_visual">
+        <geometry>
+          <mesh>
+            <uri>model://bluerov2_description/meshes/bluerov2_noprop.dae</uri>
+          </mesh>
+        </geometry>
+      </visual>
+
+      <!-- Propeller visuals (fixed to body) -->
+      <visual name="prop0_visual">
+        <pose>0.1355 -0.1 -0.0725 0 0 0.7854</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propcw.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="prop1_visual">
+        <pose>0.1355 0.1 -0.0725 0 0 -0.7854</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propccw.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="prop2_visual">
+        <pose>-0.1475 -0.1 -0.0725 0 0 2.3562</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propccw.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="prop3_visual">
+        <pose>-0.1475 0.1 -0.0725 0 0 -2.3562</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propcw.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="prop4_visual">
+        <pose>0.0025 -0.1105 -0.005 0 -1.5708 0</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propcw.dae</uri></mesh></geometry>
+      </visual>
+      <visual name="prop5_visual">
+        <pose>0.0025 0.1105 -0.005 0 -1.5708 0</pose>
+        <geometry><mesh><uri>model://bluerov2_description/meshes/bluerov2_propccw.dae</uri></mesh></geometry>
+      </visual>
+
+      <!-- IMU sensor -->
+      <sensor name="imu_sensor" type="imu">
+        <always_on>true</always_on>
+        <update_rate>50</update_rate>
+        <topic>/model/bluerov2/imu</topic>
+      </sensor>
+    </link>
+
+    <!-- Odometry publisher -->
+    <plugin filename="gz-sim-odometry-publisher-system"
+            name="gz::sim::systems::OdometryPublisher">
+      <odom_frame>world</odom_frame>
+      <robot_base_frame>bluerov2/base_link</robot_base_frame>
+      <odom_topic>/model/bluerov2/odometry</odom_topic>
+      <dimensions>3</dimensions>
+      <odom_publish_frequency>50</odom_publish_frequency>
+    </plugin>
+
+    <!--
+      NO Hydrodynamics plugin here.
+      The controller's BlueROV2Model4DOF already models drag/added-mass.
+      With gravity=0 and no Buoyancy/Hydro plugins, this is a clean
+      rigid body that DART can simulate without NaN.
+    -->
+
+  </model>
+</sdf>

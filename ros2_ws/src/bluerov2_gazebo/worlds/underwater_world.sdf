@@ -1,0 +1,208 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <world name="underwater_world">
+    <physics name="2ms" type="dart">
+      <max_step_size>0.002</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+    </physics>
+    <gravity>0 0 0</gravity>
+
+    <scene>
+      <ambient>0.35 0.45 0.55 1</ambient>
+      <background>0.02 0.08 0.22 1</background>
+      <fog><color>0.03 0.10 0.22 1</color><type>linear</type><density>0.01</density><start>15</start><end>120</end></fog>
+    </scene>
+
+    <light type="directional" name="ocean_sun">
+      <cast_shadows>true</cast_shadows><pose>0 0 50 0 0 0</pose>
+      <diffuse>0.55 0.65 0.75 1</diffuse><specular>0.2 0.25 0.3 1</specular>
+      <attenuation><range>500</range><constant>0.9</constant><linear>0.002</linear><quadratic>0.0005</quadratic></attenuation>
+      <direction>-0.3 0.2 -0.9</direction>
+    </light>
+    <light type="directional" name="fill">
+      <cast_shadows>false</cast_shadows><pose>10 -5 40 0 0 0</pose>
+      <diffuse>0.35 0.45 0.50 1</diffuse><specular>0.1 0.12 0.15 1</specular>
+      <direction>0.1 -0.1 -1.0</direction>
+    </light>
+    <light type="point" name="glow">
+      <pose>0 0 5 0 0 0</pose>
+      <diffuse>0.4 0.5 0.6 1</diffuse><specular>0.1 0.12 0.15 1</specular>
+      <attenuation><range>60</range><constant>0.6</constant><linear>0.02</linear><quadratic>0.005</quadratic></attenuation>
+    </light>
+
+    <!-- SEABED — bright sandy -->
+    <model name="seabed"><static>true</static><pose>0 0 -2 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>200 200 0.05</size></box></geometry>
+        <material><ambient>0.55 0.48 0.32 1</ambient><diffuse>0.72 0.62 0.42 1</diffuse><specular>0.1 0.08 0.05 1</specular></material>
+      </visual></link></model>
+
+    <!-- Mud patches — darker brown -->
+    <model name="mud1"><static>true</static><pose>3 -2 -1.97 0 0 0.3</pose>
+      <link name="l"><visual name="v"><geometry><box><size>6 4 0.02</size></box></geometry>
+        <material><ambient>0.25 0.20 0.12 1</ambient><diffuse>0.38 0.30 0.18 1</diffuse></material>
+      </visual></link></model>
+    <model name="mud2"><static>true</static><pose>-5 4 -1.97 0 0 -0.5</pose>
+      <link name="l"><visual name="v"><geometry><box><size>5 3 0.02</size></box></geometry>
+        <material><ambient>0.28 0.22 0.14 1</ambient><diffuse>0.40 0.32 0.20 1</diffuse></material>
+      </visual></link></model>
+    <model name="mud3"><static>true</static><pose>8 1 -1.97 0 0 1.2</pose>
+      <link name="l"><visual name="v"><geometry><box><size>4 7 0.02</size></box></geometry>
+        <material><ambient>0.22 0.18 0.10 1</ambient><diffuse>0.35 0.28 0.16 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- BOULDERS — grey-green mossy stone -->
+    <model name="boulder1"><static>true</static><pose>6 -4 -1.5 0.2 0.1 0.8</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.9</radius></sphere></geometry>
+        <material><ambient>0.32 0.35 0.28 1</ambient><diffuse>0.50 0.52 0.42 1</diffuse><specular>0.08 0.08 0.06 1</specular></material>
+      </visual></link></model>
+    <model name="boulder2"><static>true</static><pose>7 -3.5 -1.6 0.3 -0.1 1.5</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.6</radius></sphere></geometry>
+        <material><ambient>0.35 0.36 0.30 1</ambient><diffuse>0.52 0.54 0.44 1</diffuse></material>
+      </visual></link></model>
+    <model name="boulder3"><static>true</static><pose>5.5 -5 -1.7 0.15 0.25 2.1</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.45</radius></sphere></geometry>
+        <material><ambient>0.30 0.32 0.26 1</ambient><diffuse>0.48 0.50 0.40 1</diffuse></material>
+      </visual></link></model>
+    <model name="flat_rock"><static>true</static><pose>-3 -6 -1.85 0.05 0.08 0.4</pose>
+      <link name="l"><visual name="v"><geometry><box><size>2.5 1.8 0.3</size></box></geometry>
+        <material><ambient>0.38 0.36 0.30 1</ambient><diffuse>0.55 0.52 0.42 1</diffuse><specular>0.1 0.09 0.07 1</specular></material>
+      </visual></link></model>
+
+    <!-- Small stones -->
+    <model name="s1"><static>true</static><pose>2 3 -1.9 0.4 0.2 1.1</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.15</radius></sphere></geometry>
+        <material><ambient>0.40 0.38 0.30 1</ambient><diffuse>0.58 0.55 0.44 1</diffuse></material>
+      </visual></link></model>
+    <model name="s2"><static>true</static><pose>-1 5 -1.92 0.1 0.3 2.5</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.12</radius></sphere></geometry>
+        <material><ambient>0.42 0.38 0.28 1</ambient><diffuse>0.56 0.52 0.40 1</diffuse></material>
+      </visual></link></model>
+    <model name="s3"><static>true</static><pose>4 1 -1.93 0.2 0.5 0.7</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.18</radius></sphere></geometry>
+        <material><ambient>0.36 0.34 0.26 1</ambient><diffuse>0.54 0.50 0.38 1</diffuse></material>
+      </visual></link></model>
+    <model name="s4"><static>true</static><pose>-4 -2 -1.91 0.6 0.1 3.0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.2</radius></sphere></geometry>
+        <material><ambient>0.34 0.32 0.24 1</ambient><diffuse>0.52 0.48 0.36 1</diffuse></material>
+      </visual></link></model>
+    <model name="s5"><static>true</static><pose>-6 -4 -1.94 0.3 0.4 1.8</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.1</radius></sphere></geometry>
+        <material><ambient>0.38 0.35 0.27 1</ambient><diffuse>0.55 0.50 0.40 1</diffuse></material>
+      </visual></link></model>
+    <model name="s6"><static>true</static><pose>9 -6 -1.88 0.5 0.2 0.3</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.25</radius></sphere></geometry>
+        <material><ambient>0.33 0.34 0.28 1</ambient><diffuse>0.50 0.52 0.42 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- CORAL — bright orange/pink -->
+    <model name="coral1"><static>true</static><pose>-2 -3 -1.75 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.35</radius></sphere></geometry>
+        <material><ambient>0.60 0.35 0.20 1</ambient><diffuse>0.85 0.50 0.30 1</diffuse></material>
+      </visual></link></model>
+    <model name="coral2"><static>true</static><pose>-1.5 -3.3 -1.82 0.1 0.05 0.3</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.22</radius></sphere></geometry>
+        <material><ambient>0.65 0.38 0.22 1</ambient><diffuse>0.88 0.55 0.32 1</diffuse></material>
+      </visual></link></model>
+    <model name="coral3"><static>true</static><pose>-2.3 -2.6 -1.88 0.08 0.03 0.9</pose>
+      <link name="l"><visual name="v"><geometry><sphere><radius>0.18</radius></sphere></geometry>
+        <material><ambient>0.58 0.32 0.18 1</ambient><diffuse>0.82 0.48 0.28 1</diffuse></material>
+      </visual></link></model>
+    <!-- Tube coral — pink/red -->
+    <model name="tube1"><static>true</static><pose>-7 2 -1.6 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.08</radius><length>0.8</length></cylinder></geometry>
+        <material><ambient>0.6 0.2 0.3 1</ambient><diffuse>0.85 0.30 0.40 1</diffuse></material>
+      </visual></link></model>
+    <model name="tube2"><static>true</static><pose>-6.8 2.3 -1.7 0.1 0.05 0.5</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.06</radius><length>0.6</length></cylinder></geometry>
+        <material><ambient>0.55 0.18 0.25 1</ambient><diffuse>0.80 0.28 0.35 1</diffuse></material>
+      </visual></link></model>
+    <model name="tube3"><static>true</static><pose>-7.2 1.8 -1.65 -0.05 0.1 1.2</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.07</radius><length>0.7</length></cylinder></geometry>
+        <material><ambient>0.65 0.22 0.28 1</ambient><diffuse>0.90 0.32 0.38 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- KELP — bright green -->
+    <model name="k1"><static>true</static><pose>-8 -1 -1.2 0.05 0.03 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.06 0.15 1.6</size></box></geometry>
+        <material><ambient>0.12 0.42 0.15 1</ambient><diffuse>0.18 0.62 0.22 1</diffuse></material>
+      </visual></link></model>
+    <model name="k2"><static>true</static><pose>-8.3 -0.7 -1.3 -0.08 0.04 0.3</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.05 0.12 1.4</size></box></geometry>
+        <material><ambient>0.14 0.45 0.18 1</ambient><diffuse>0.20 0.65 0.25 1</diffuse></material>
+      </visual></link></model>
+    <model name="k3"><static>true</static><pose>-7.8 -1.4 -1.25 0.06 -0.05 0.7</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.07 0.14 1.5</size></box></geometry>
+        <material><ambient>0.10 0.40 0.12 1</ambient><diffuse>0.16 0.58 0.20 1</diffuse></material>
+      </visual></link></model>
+    <model name="k4"><static>true</static><pose>-8.5 -1.1 -1.35 0.03 0.07 1.1</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.05 0.10 1.3</size></box></geometry>
+        <material><ambient>0.13 0.44 0.16 1</ambient><diffuse>0.19 0.64 0.24 1</diffuse></material>
+      </visual></link></model>
+    <model name="k5"><static>true</static><pose>3 8 -1.15 0.04 -0.06 0.5</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.06 0.13 1.7</size></box></geometry>
+        <material><ambient>0.11 0.40 0.14 1</ambient><diffuse>0.17 0.60 0.22 1</diffuse></material>
+      </visual></link></model>
+    <model name="k6"><static>true</static><pose>3.3 8.4 -1.28 -0.03 0.05 0.8</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.05 0.11 1.4</size></box></geometry>
+        <material><ambient>0.12 0.42 0.15 1</ambient><diffuse>0.18 0.62 0.23 1</diffuse></material>
+      </visual></link></model>
+    <!-- Short seagrass -->
+    <model name="g1"><static>true</static><pose>1 -1 -1.8 0.02 0.01 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.03 0.08 0.4</size></box></geometry>
+        <material><ambient>0.15 0.38 0.12 1</ambient><diffuse>0.22 0.55 0.20 1</diffuse></material>
+      </visual></link></model>
+    <model name="g2"><static>true</static><pose>1.2 -0.8 -1.82 -0.03 0.02 0.4</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.03 0.06 0.35</size></box></geometry>
+        <material><ambient>0.16 0.40 0.14 1</ambient><diffuse>0.24 0.58 0.22 1</diffuse></material>
+      </visual></link></model>
+    <model name="g3"><static>true</static><pose>0.8 -1.3 -1.83 0.04 -0.01 0.8</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.04 0.07 0.3</size></box></geometry>
+        <material><ambient>0.12 0.36 0.10 1</ambient><diffuse>0.20 0.52 0.18 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- SUNKEN WOOD — warm brown -->
+    <model name="log1"><static>true</static><pose>4 5 -1.85 0.08 1.52 0.6</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.12</radius><length>3.0</length></cylinder></geometry>
+        <material><ambient>0.30 0.20 0.10 1</ambient><diffuse>0.48 0.35 0.18 1</diffuse></material>
+      </visual></link></model>
+    <model name="branch1"><static>true</static><pose>3 6 -1.88 0.3 1.4 1.2</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.04</radius><length>1.2</length></cylinder></geometry>
+        <material><ambient>0.32 0.22 0.12 1</ambient><diffuse>0.50 0.38 0.20 1</diffuse></material>
+      </visual></link></model>
+    <model name="plank1"><static>true</static><pose>-5 -5 -1.9 0.02 0.05 1.8</pose>
+      <link name="l"><visual name="v"><geometry><box><size>1.5 0.3 0.05</size></box></geometry>
+        <material><ambient>0.28 0.18 0.08 1</ambient><diffuse>0.45 0.32 0.16 1</diffuse></material>
+      </visual></link></model>
+    <model name="log2"><static>true</static><pose>-3 7 -1.87 0.1 1.5 2.1</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.08</radius><length>2.0</length></cylinder></geometry>
+        <material><ambient>0.26 0.18 0.10 1</ambient><diffuse>0.44 0.32 0.18 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- PIPELINE — yellow/rusty -->
+    <model name="pipeline"><static>true</static><pose>10 0 -1.7 1.5708 0 0</pose>
+      <link name="l"><visual name="v"><geometry><cylinder><radius>0.25</radius><length>50.0</length></cylinder></geometry>
+        <material><ambient>0.50 0.45 0.15 1</ambient><diffuse>0.75 0.65 0.25 1</diffuse><specular>0.15 0.12 0.08 1</specular></material>
+      </visual></link></model>
+    <model name="psup1"><static>true</static><pose>10 -8 -1.85 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.8 0.15 0.3</size></box></geometry>
+        <material><ambient>0.35 0.32 0.25 1</ambient><diffuse>0.55 0.50 0.38 1</diffuse></material>
+      </visual></link></model>
+    <model name="psup2"><static>true</static><pose>10 8 -1.85 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>0.8 0.15 0.3</size></box></geometry>
+        <material><ambient>0.35 0.32 0.25 1</ambient><diffuse>0.55 0.50 0.38 1</diffuse></material>
+      </visual></link></model>
+
+    <!-- Water surface -->
+    <model name="water_surface"><static>true</static><pose>0 0 8 0 0 0</pose>
+      <link name="l"><visual name="v"><geometry><box><size>200 200 0.01</size></box></geometry>
+        <material><ambient>0.08 0.18 0.35 0.3</ambient><diffuse>0.12 0.25 0.45 0.2</diffuse><specular>0.3 0.35 0.4 0.5</specular></material>
+      </visual></link></model>
+
+    <!-- PLUGINS -->
+    <plugin filename="gz-sim-physics-system" name="gz::sim::systems::Physics"/>
+    <plugin filename="gz-sim-user-commands-system" name="gz::sim::systems::UserCommands"/>
+    <plugin filename="gz-sim-scene-broadcaster-system" name="gz::sim::systems::SceneBroadcaster"/>
+    <plugin filename="gz-sim-imu-system" name="gz::sim::systems::Imu"/>
+    <plugin filename="gz-sim-apply-link-wrench-system" name="gz::sim::systems::ApplyLinkWrench"/>
+  </world>
+</sdf>
