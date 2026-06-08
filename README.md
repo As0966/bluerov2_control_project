@@ -1,42 +1,44 @@
-# HASTEN-AUV
+# Mathematical Modeling & Controller Design for a BlueROV2-Inspired 4-DOF Underwater Vehicle
 
-> **H**aptic-shared **A**daptive con**S**ol **T**racking for **E**xperimental **N**avigation of **A**utonomous **U**nderwater **V**ehicles
+> **HASTEN-AUV** — Haptic-shared Adaptive conSol Tracking for Experimental Navigation of Autonomous Underwater Vehicles
 
-HASTEN-AUV is a ROS 2-based underwater robotics project for adaptive nonlinear control, haptic shared control, and simulation of BlueROV2/AUV systems. Developed under the **TÜBİTAK 1002A** research programme, it provides a full simulation stack, a modular controller suite, and a GUI-based mission planner for comparative benchmarking of advanced control architectures.
+A comprehensive ROS 2 + Gazebo Harmonic simulation framework implementing and benchmarking **7 nonlinear control architectures** for a 4-DOF BlueROV2-inspired AUV. Developed under the **TÜBİTAK 1002A** research programme.
 
 [![ROS 2: Humble](https://img.shields.io/badge/ROS2-Humble-blue?logo=ros)](https://docs.ros.org/en/humble/)
-[![Gazebo: Harmonic](https://img.shields.io/badge/Gazebo-Harmonic-orange?logo=gazebo)](https://gazebosim.org/docs/harmonic/getstarted/)
-[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker)](https://www.docker.com/)
-[![Dev Container](https://img.shields.io/badge/Dev%20Container-VS%20Code-007ACC?logo=visualstudiocode)](https://containers.dev/)
+[![Gazebo: Harmonic](https://img.shields.io/badge/Gazebo-Harmonic-orange)](https://gazebosim.org/docs/harmonic/getstarted/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python)](https://www.python.org/)
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![TÜBİTAK](https://img.shields.io/badge/TÜBİTAK-1002A-red)](https://www.tubitak.gov.tr/)
+
+---
+
+## 🎬 Simulation Videos
+
+All controllers were validated in **Gazebo Harmonic** simulation on three standard trajectories (Circle, Figure-8 / Lemniscate, and 3D Spline). Full recordings are available in the [`Simulation_Videos/`](./Simulation_Videos/) folder.
+
+| Controller | Trajectory | Video |
+|---|---|---|
+| State Feedback | Circle | [`State_feedback_circle.webm`](Simulation_Videos/State_feedback_Controller_circular_trajectory_tracking.webm) |
+| State Observer | Spline | [`State_observer_spline.webm`](Simulation_Videos/State_Observer_Controller_spline_Trajectory_Tracking.webm) |
+| FL Input | Infinity | [`FL_input_infinity.webm`](Simulation_Videos/FeedbackLinearization_input_controller_infinity_path_tracking.webm) |
+| FL I/O | Circle | [`FL_io_circle.webm`](Simulation_Videos/Feedback_linearization_inputoutput_Controller_circular_trajectory_tracking.webm) |
+| MRAC | 3D Spline | [`MRAC_spline.webm`](Simulation_Videos/MRAC_3d_spline_trajectoryTracking.webm) |
+| Adaptive Backstepping | Infinity (∞) | [`AdaptiveBS_infinity.webm`](Simulation_Videos/Adaptive_BackStepping_Controller_infinty_trajectory_Tracking.webm) |
+| Adaptive INN | Circle | [`INN_circle.webm`](Simulation_Videos/INN_circular_trajectory_tracking.webm) |
 
 ---
 
 ## 📋 Overview
 
-HASTEN-AUV integrates **Gazebo Harmonic** physics simulation with a **ROS 2 Humble** control stack to enable reproducible, publication-quality benchmarking of nonlinear underwater vehicle controllers. The project supports both software-in-the-loop (SITL) development via Docker Dev Containers and future real-hardware deployment through MAVROS.
+HASTEN-AUV integrates **Gazebo Harmonic** physics simulation with a **ROS 2 Humble** control stack, enabling reproducible, publication-quality benchmarking of nonlinear AUV controllers. The project supports both software-in-the-loop (SITL) development via Docker Dev Containers and future real-hardware deployment through MAVROS.
 
-Key research contributions:
-- Comparative evaluation of five adaptive/nonlinear controllers on a 6-DOF AUV model
-- Online backpropagation-trained Inverse Neural Network (INN) controller
-- Haptic shared-control architecture for human-in-the-loop teleoperation
-- Ocean current disturbance injection for robustness testing
-
----
-
-## ✨ Features
-
-| Feature | Details |
-|---|---|
-| 🤖 **ROS 2 Humble** | Full workspace with custom packages and launch files |
-| 🐳 **Docker & Dev Container** | One-command reproducible environment |
-| 🌊 **Gazebo Harmonic Simulation** | BlueROV2 URDF/SDF with hydrodynamics |
-| 🧠 **5 Controller Architectures** | State Feedback → INN (see table below) |
-| 📡 **Ocean Current Disturbance** | Configurable current node for robustness testing |
-| 📊 **Automated Benchmarking** | CSV logging + RMSE/MSE/MAE/ITAE metrics |
-| 🖥️ **Mission Control GUI** | Python-based trajectory planner and controller selector |
-| 🔗 **MAVROS-Ready** | Hardware interface layer for real BlueROV2 deployment |
+**Key research contributions:**
+- Mathematical modeling of BlueROV2-inspired 4-DOF AUV (Fossen's formulation)
+- Comparative evaluation of 7 nonlinear controllers across 3 trajectory types
+- Online backpropagation-trained **Inverse Neural Network (INN)** controller
+- **Haptic shared-control** architecture for human-in-the-loop teleoperation
+- Ocean current disturbance injection (Dryden model) for robustness testing
 
 ---
 
@@ -55,7 +57,7 @@ Key research contributions:
                            │ Control Law τ
 ┌──────────────────────────▼──────────────────────────────┐
 │                 Control Algorithms Layer                  │
-│  State FB │ FL-IO │ MRAC │ Adaptive BS │ Adaptive INN   │
+│  State FB │ State Obs. │ FL-In │ FL-IO │ MRAC │ ABS │ INN │
 └──────────────────────────┬──────────────────────────────┘
                            │ MAVROS (hardware only)
                     BlueROV2 / ArduSub
@@ -65,40 +67,94 @@ Key research contributions:
 
 ---
 
+## ⚙️ Controller Suite
+
+| # | Controller | Type | Description |
+|---|---|---|---|
+| 1 | **State Feedback** | Linear | Full-state LQR feedback; baseline reference |
+| 2 | **State Observer** | Linear | Luenberger observer + state feedback |
+| 3 | **FL (Input)** | Nonlinear | Input-space feedback linearization |
+| 4 | **FL (I/O)** | Nonlinear | Input-output feedback linearization |
+| 5 | **MRAC** | Adaptive | Model Reference Adaptive Control (MIT rule) |
+| 6 | **Adaptive Backstepping** | Adaptive | Lyapunov-stable recursive backstepping with adaptation |
+| 7 | **Adaptive INN** | Neural-Adaptive | Online backprop-trained Inverse Neural Network |
+
+---
+
+## 📊 Experimental Results
+
+### Performance Metrics Summary
+
+All metrics averaged across Circle, Figure-8, and 3D Spline trajectories:
+
+| Controller | Pos RMSE (m) | Pos ITAE | Yaw RMSE (rad) | Yaw ITAE | Rank |
+|---|:---:|:---:|:---:|:---:|:---:|
+| **Backstepping** | **0.0364** | **40.57** | **0.0432** | **9.67** | 🥇 |
+| **FL I/O** | **0.0278** | **10.76** | 0.0734 | 17.66 | 🥈 |
+| Adaptive INN | 0.0393 | 41.31 | 0.0434 | 9.99 | 🥉 |
+| Adapt. Backstepping | 0.0681 | 77.02 | 0.0911 | 3.60 | 4 |
+| MRAC | 0.1317 | 120.62 | 0.8576 | 754.99 | 5 |
+| State Observer | 0.1934 | 299.37 | 0.0950 | 88.18 | 6 |
+| State Feedback | 0.2305 | 381.22 | 0.1530 | 6.32 | 7 |
+| FL Input | 0.2878 | 570.62 | 1.5254 | 1658.5 | 8 |
+
+> **Best overall**: Standard **Backstepping** controller achieved lowest RMSE on circle/figure-8 trajectories, while **FL I/O** excelled on precision tasks with lowest ITAE.
+
+### Trajectory Tracking Figures
+
+**Backstepping — Circle Trajectory**
+![Backstepping Circle](figures/backstepping_circle_gazebo.png)
+
+**Adaptive Backstepping — Figure-8 (Lemniscate) Trajectory**
+![Adaptive Backstepping Figure8](figures/hasten_adaptive_backstepping_figure8_gazebo.png)
+
+**FL I/O — Circle Trajectory**
+![FL IO Circle](figures/hasten_fl_io_circle_gazebo.png)
+
+**Adaptive INN — 3D Spline Trajectory**
+![INN Spline](figures/hasten_inn_spline_gazebo.png)
+
+---
+
 ## 📁 Repository Structure
 
 ```
-hasten-auv/
+bluerov2_control_project/
+├── Simulation_Videos/           # ← Gazebo simulation recordings (webm)
+│   ├── State_feedback_Controller_circular_trajectory_tracking.webm
+│   ├── Adaptive_BackStepping_Controller_infinty_trajectory_Tracking.webm
+│   ├── MRAC_3d_spline_trajectoryTracking.webm
+│   ├── INN_circular_trajectory_tracking.webm
+│   └── ...
 ├── ros2_ws/
 │   └── src/
 │       └── bluerov2_control/
 │           ├── bluerov2_control/
-│           │   ├── controller_node.py        # Main controller dispatcher
-│           │   ├── state_observer_node.py    # EKF-based state observer
-│           │   ├── ocean_current_node.py     # Disturbance injection
-│           │   ├── data_logger_node.py       # CSV trajectory logger
-│           │   ├── mission_control_gui.py    # Mission planner GUI
-│           │   └── controllers/
-│           │       ├── hasten_state_feedback.py
-│           │       ├── hasten_fl_input.py
-│           │       ├── hasten_fl_io.py        # ← Best performer
-│           │       ├── hasten_mrac.py
-│           │       ├── hasten_adaptive_backstepping.py
-│           │       └── hasten_inn.py          # Adaptive Neural Controller
-│           ├── launch/
-│           │   ├── bluerov2_sim.launch.py
-│           │   └── controllers.launch.py
-│           ├── config/
-│           │   └── controller_params.yaml
-│           └── package.xml
-├── results/
-│   ├── metrics_summary.csv
-│   └── plots/
-├── .devcontainer/
-│   ├── devcontainer.json
-│   └── Dockerfile
-├── docker-compose.yml
-└── README.md
+│           │   ├── controller_node.py         # Main controller dispatcher
+│           │   ├── state_observer_node.py     # Luenberger state observer
+│           │   ├── ocean_current_node.py      # Dryden disturbance injection
+│           │   ├── data_logger_node.py        # CSV trajectory logger
+│           │   └── mission_control_gui.py     # Mission planner GUI
+│           ├── controllers/
+│           │   ├── state_feedback.py
+│           │   ├── state_observer_linear.py
+│           │   ├── fl_input.py
+│           │   ├── fl_io.py
+│           │   ├── mrac.py
+│           │   ├── backstepping.py
+│           │   ├── hasten_adaptive_backstepping.py
+│           │   └── hasten_inn.py
+│           └── launch/
+│               └── bluerov2_control.launch.py
+├── results/                     # CSV performance logs (all controller × trajectory)
+│   └── metrics_summary.csv
+├── figures/                     # Trajectory + error + torque plots (PNG)
+├── docs/
+│   ├── architecture.png
+│   └── HASTEN_AUV.pdf
+├── matlab/                      # MATLAB analysis scripts
+├── notebooks/                   # Jupyter notebooks for data analysis
+└── scripts/                     # Utility scripts
 ```
 
 ---
@@ -108,245 +164,133 @@ hasten-auv/
 ### Prerequisites
 
 - Ubuntu 22.04 LTS
-- [Docker Engine ≥ 24.0](https://docs.docker.com/engine/install/)
-- [VS Code](https://code.visualstudio.com/) + [Dev Containers extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
+- [ROS 2 Humble](https://docs.ros.org/en/humble/Installation.html)
+- [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/install/)
+- Python 3.10+
+- Docker (optional, for Dev Container)
 
-> **Note:** No local ROS 2 or Gazebo installation required — everything runs inside the container.
-
----
-
-### Option A — VS Code Dev Container (Recommended)
-
-```bash
-# 1. Clone the repository
-git clone https://github.com/As0966/bluerov2_control_project.git
-cd hasten-auv
-
-# 2. Open in VS Code
-code .
-
-# 3. When prompted, click "Reopen in Container"
-#    (or: Ctrl+Shift+P → "Dev Containers: Reopen in Container")
-```
-
-The container will automatically:
-- Install ROS 2 Humble, Gazebo Harmonic, and all Python dependencies
-- Build the ROS 2 workspace (`colcon build`)
-- Source the workspace on every new terminal
-
----
-
-### Option B — Docker Compose
+### 1. Clone & Build
 
 ```bash
 git clone https://github.com/As0966/bluerov2_control_project.git
-cd hasten-auv
-
-# Start the simulation environment
-docker-compose up --build
-
-# In a new terminal, attach to the running container
-docker exec -it hasten_auv_container bash
-source /ros2_ws/install/setup.bash
-```
-
----
-
-### Option C — Native ROS 2 Install
-
-```bash
-# Requires: Ubuntu 22.04 + ROS 2 Humble + Gazebo Harmonic
-
-git clone https://github.com/As0966/bluerov2_control_project.git
-cd hasten-auv/ros2_ws
-
-# Install dependencies
-rosdep update
-rosdep install --from-paths src --ignore-src -r -y
-
-# Build
+cd bluerov2_control_project
 colcon build --symlink-install
 source install/setup.bash
 ```
 
----
-
-## 🎮 Running the Simulation
-
-### 1. Launch the Full Stack
+### 2. Launch Simulation
 
 ```bash
-# Inside the container or sourced native environment:
-ros2 launch bluerov2_control bluerov2_sim.launch.py
-```
+# Launch Gazebo + ROS 2 nodes
+ros2 launch bluerov2_control bluerov2_control.launch.py
 
-This starts: Gazebo Harmonic, Controller node, State observer, Ocean current node, Data logger.
-
-### 2. Select a Controller
-
-```bash
-# At launch:
-ros2 launch bluerov2_control bluerov2_sim.launch.py controller:=hasten_fl_io
-
-# Hot-swap at runtime:
-ros2 param set /controller_node controller hasten_inn
-```
-
-**Available controllers:**
-
-| Parameter | Algorithm | Category |
-|---|---|---|
-| `hasten_state_feedback` | Linear State Feedback | Linear |
-| `hasten_fl_input` | Input-State Feedback Linearization | Nonlinear |
-| `hasten_fl_io` ⭐ | Input-Output Feedback Linearization | Nonlinear |
-| `hasten_mrac` | Model Reference Adaptive Control | Adaptive |
-| `hasten_adaptive_backstepping` | Adaptive Backstepping | Adaptive |
-| `hasten_inn` | Adaptive Inverse Neural Network | Neural |
-
-> ⭐ Best tracking performance across all trajectories.
-
-### 3. Select a Trajectory
-
-```bash
-ros2 launch bluerov2_control bluerov2_sim.launch.py trajectory:=circle    # or figure8, spline
-```
-
-### 4. Mission Control GUI
-
-```bash
+# In a second terminal: open Mission GUI
 ros2 run bluerov2_control mission_control_gui
 ```
 
-Real-time controller selection, trajectory switching, disturbance injection, and live plotting.
+### 3. Run All Benchmarks
 
----
-
-## 🧠 Controller Details
-
-### State Feedback
-Linear control: `τ = −K·eₓ` where `eₓ` is the 8-state pose/velocity error. Baseline reference.
-
-### Feedback Linearization — Input-Output (FL-IO)
-Cascaded nonlinear cancellation: outer position loop computes `νd`, inner velocity loop computes `τ`. Best overall tracking.
-
-### MRAC
-Reference model `ν̇ₘ = aₘ·νₘ + bₘ·νd` with MIT-rule online adaptation to parameter uncertainty.
-
-### Adaptive Backstepping
-Regressor-matrix estimation of AUV mass/damping coefficients. Lyapunov-stable adaptive law.
-
-### Adaptive INN (Inverse Neural Network)
-Teacher-Student online learning framework:
-- **Teacher**: Adaptive Backstepping controller
-- **Student**: MLP updated via online backpropagation
-- **Law**: `ΔW = −η ∇_W (½ ‖τ_BS − τ_INN‖²)`
-- **Input**: `[eη, eν, νd, ν] ∈ ℝ¹⁶`
-
----
-
-## 📊 Results
-
-Benchmark across **circle**, **figure-8**, and **spline** trajectories:
-
-| Controller | Trajectory | Pos RMSE (m) | Pos MAE (m) | ITAE | Ψ RMSE (rad) |
-|---|---|---|---|---|---|
-| **FL-IO** ⭐ | circle | **0.0357** | **0.0150** | **16.14** | 0.1160 |
-| | figure-8 | **0.0294** | **0.0102** | **8.69** | 0.0550 |
-| | spline | **0.0183** | **0.0071** | **7.45** | 0.0274 |
-| **Backstepping** | circle | 0.0489 | 0.0398 | 62.96 | 0.1330 |
-| | figure-8 | 0.0356 | 0.0233 | 32.11 | 0.0645 |
-| | spline | 0.0255 | 0.0183 | 26.63 | 0.0307 |
-| **Adaptive INN** | circle | 0.0507 | 0.0403 | 63.05 | 0.1353 |
-| | figure-8 | 0.0390 | 0.0243 | 32.59 | 0.0660 |
-| | spline | 0.0288 | 0.0200 | 28.28 | 0.0307 |
-| **Adaptive BS** | circle | 0.0866 | 0.0750 | 117.37 | 0.1239 |
-| **MRAC** | circle | 0.1709 | 0.1247 | 156.34 | 1.4142 |
-| **State FB** | circle | 0.3276 | 0.3255 | 574.34 | 0.1780 |
-
-Full results: [`results/metrics_summary.csv`](results/metrics_summary.csv)
-
-> **Key finding:** IO Feedback Linearization achieves the lowest RMSE and ITAE across all trajectories. The Adaptive INN closely follows Backstepping, validating the teacher-student learning approach.
-
----
-
-## 🛠️ Dev Container Configuration
-
-```jsonc
-// .devcontainer/devcontainer.json
-{
-  "name": "HASTEN-AUV",
-  "build": { "dockerfile": "Dockerfile" },
-  "runArgs": ["--network=host", "--privileged"],
-  "mounts": ["source=${localWorkspaceFolder},target=/ros2_ws,type=bind"],
-  "postCreateCommand": "cd /ros2_ws && colcon build --symlink-install",
-  "customizations": {
-    "vscode": {
-      "extensions": ["ms-python.python", "ms-iot.vscode-ros", "ms-vscode.cmake-tools"]
-    }
-  }
-}
-```
-
-```dockerfile
-# .devcontainer/Dockerfile
-FROM osrf/ros:humble-desktop-full
-RUN apt-get update && apt-get install -y \
-    gz-harmonic \
-    python3-pip \
-    ros-humble-mavros \
-    ros-humble-mavros-extras \
-  && pip3 install numpy scipy matplotlib
+```bash
+python3 scripts/run_all_benchmarks.py
+# Logs saved to results/ as CSV files
+# Plots saved to figures/ as PNG files
 ```
 
 ---
 
-## 🤝 Contributing
+## 📐 Mathematical Model
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/your-feature`
-3. Commit with clear messages: `git commit -m "Add: feature description"`
-4. Open a Pull Request
+The AUV dynamics follow **Fossen's (2011)** formulation for marine craft:
 
-Bug reports → [Issues](../../issues)
+```
+M·ν̇ + C(ν)·ν + D(ν)·ν + g(η) = τ_control + τ_disturbance
+η̇ = J(η)·ν
+```
+
+Where:
+- **η** = [x, y, z, ψ]ᵀ — position + yaw state
+- **ν** = [u, v, w, r]ᵀ — body-frame velocity (surge, sway, heave, yaw)
+- **M** = rigid-body + added mass inertia matrix
+- **C(ν)** = Coriolis + centripetal matrix
+- **D(ν)** = linear + quadratic drag matrix
+- **g(η)** = gravitational/buoyancy vector
 
 ---
 
-## 📚 Citation
+## 🌊 BlueROV2 Parameters
+
+| Parameter | Symbol | Value | Unit |
+|---|---|---|---|
+| Mass | m | 11.4 | kg |
+| Added mass (surge) | Xü | -5.5 | kg |
+| Added mass (sway) | Yv̇ | -12.7 | kg |
+| Added mass (heave) | Zẇ | -14.57 | kg |
+| Added mass (yaw) | Nṙ | -0.12 | kg·m² |
+| Linear drag (surge) | Xu | -4.03 | N·s/m |
+| Linear drag (sway) | Yv | -6.22 | N·s/m |
+| Buoyancy force | B | 112.8 | N |
+| Gravity | W | 111.72 | N |
+
+---
+
+## 🗃️ Results Data
+
+All raw CSV logs are in [`results/`](./results/):
+
+```
+results/
+├── metrics_summary.csv                           # Aggregated RMSE/MSE/MAE/ITAE
+├── backstepping_circle_gazebo.csv
+├── backstepping_figure8_gazebo.csv
+├── hasten_adaptive_backstepping_circle_gazebo.csv
+├── hasten_fl_io_circle_gazebo.csv
+├── hasten_inn_spline_gazebo.csv
+├── hasten_mrac_spline_gazebo.csv
+└── ...
+```
+
+Load and analyze in Python:
+```python
+import pandas as pd
+df = pd.read_csv("results/metrics_summary.csv")
+print(df.groupby("Controller")["Pos_RMSE"].mean().sort_values())
+```
+
+---
+
+## 📜 Citation
+
+If you use this work, please cite:
 
 ```bibtex
-@misc{hasten_auv_2025,
-  author       = {Bayisa Roba},
-  title        = {HASTEN-AUV: Haptic-Shared Adaptive Control for Autonomous Underwater Vehicles},
-  year         = {2025},
-  publisher    = {GitHub},
-  journal      = {GitHub repository},
-  howpublished = {\url{https://github.com/As0966/bluerov2_control_project}},
-  note         = {TÜBİTAK 1002A Research Project}
+@mastersthesis{JankaHastenAUV2025,
+  author    = {Bayisa Ligaba Janka},
+  title     = {Haptic-Shared Adaptive Control for Autonomous Underwater Vehicles},
+  school    = {İzmir Katip Çelebi University},
+  year      = {2025},
+  note      = {TÜBİTAK 1002-A Project, supported under grant 125E623}
 }
 ```
+
+---
+
+## 👤 Author
+
+**Bayisa Ligaba Janka**
+- MSc Researcher — Robot Control
+- İzmir Katip Çelebi University, Turkey
+- [![ORCID](https://img.shields.io/badge/ORCID-0009--0009--0510--0944-green?logo=orcid)](https://orcid.org/0009-0009-0510-0944)
+- [![GitHub](https://img.shields.io/badge/GitHub-As0966-black?logo=github)](https://github.com/As0966)
+- [![Portfolio](https://img.shields.io/badge/Portfolio-as0966.github.io-blue)](https://as0966.github.io)
+
+**Advisor:** Assoc. Prof. Kamil ÇETİN — İzmir Katip Çelebi University
 
 ---
 
 ## 📄 License
 
-MIT License — see [LICENSE](LICENSE).
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 ---
 
-## 🔗 References
-
-- [BlueROV2 — Blue Robotics](https://bluerobotics.com/store/rov/bluerov2/)
-- [ROS 2 Humble](https://docs.ros.org/en/humble/)
-- [Gazebo Harmonic](https://gazebosim.org/docs/harmonic/getstarted/)
-- [MAVROS](http://wiki.ros.org/mavros)
-- Fossen, T. I. (2011). *Handbook of Marine Craft Hydrodynamics and Motion Control*. Wiley.
-
----
-
-<div align="center">
-
-**Built for underwater robotics research · TÜBİTAK 1002A**
-
-[⭐ Star this repo](../../stargazers) · [🐛 Report a bug](../../issues) · [💡 Request a feature](../../issues)
-
-</div>
+*Research conducted under TÜBİTAK 1002-A support programme.*
