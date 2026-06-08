@@ -2,14 +2,13 @@
 
 > **HASTEN-AUV** — Haptic-shared Adaptive conSol Tracking for Experimental Navigation of Autonomous Underwater Vehicles
 
-A comprehensive ROS 2 + Gazebo Harmonic simulation framework implementing and benchmarking **7 nonlinear control architectures** for a 4-DOF BlueROV2-inspired AUV. Developed under the **TÜBİTAK 1002A** research programme.
+A comprehensive ROS 2 + Gazebo Harmonic simulation framework implementing and benchmarking **7 nonlinear control architectures** for a 4-DOF BlueROV2-inspired AUV.
 
 [![ROS 2: Humble](https://img.shields.io/badge/ROS2-Humble-blue?logo=ros)](https://docs.ros.org/en/humble/)
 [![Gazebo: Harmonic](https://img.shields.io/badge/Gazebo-Harmonic-orange)](https://gazebosim.org/docs/harmonic/getstarted/)
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?logo=python)](https://www.python.org/)
 [![Docker](https://img.shields.io/badge/Docker-Supported-2496ED?logo=docker)](https://www.docker.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![TÜBİTAK](https://img.shields.io/badge/TÜBİTAK-1002A-red)](https://www.tubitak.gov.tr/)
 
 ---
 
@@ -268,7 +267,7 @@ If you use this work, please cite:
   title     = {Haptic-Shared Adaptive Control for Autonomous Underwater Vehicles},
   school    = {İzmir Katip Çelebi University},
   year      = {2025},
-  note      = {TÜBİTAK 1002-A Project, supported under grant 125E623}
+
 }
 ```
 
@@ -293,4 +292,3 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 ---
 
-*Research conducted under TÜBİTAK 1002-A support programme.*
